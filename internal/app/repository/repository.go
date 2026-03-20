@@ -125,7 +125,7 @@ func (r *Repository) GetDraftRequestByUserID(userID int) (*Request, error) {
 }
 
 func (r *Repository) DeleteRequest(requestID int) error {
-	if err := r.DB.Model(&Request{}).Where("id = ?", requestID).Update("status", "deleted").Error; err != nil {
+	if err := r.DB.Exec("UPDATE requests SET status = ? WHERE id = ?", "deleted", requestID).Error; err != nil {
 		logrus.Error("Ошибка при удалении заявки:", err)
 		return err
 	}
