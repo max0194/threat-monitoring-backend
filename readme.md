@@ -1,2 +1,28 @@
-# threat-monitoring-backend
-Backend for Threat Monitoring app
+# Бэкенд приложения мониторинга ИТ-угроз
+
+## Краткое описание
+Веб-приложение предназначено для отправки сотрудниками случаев возникновения ИТ-угроз в компании с указанием фактов и скриншотов угроз.
+
+## Структура
+### Приложение:
+- main.go - точка входа в приложение;
+- server.go - запуск сервера, вход в сервисы-контейнеры Minio и Postgres, хранение методов GET и POST;
+- handler.go - обработчики;
+- database.go - миграция базы данных и функция входа в Postgres;
+- minio.go - функция входа в Minio;
+- models.go - модели базы данных;
+- repository.go - методы взаимодействия с БД (Delete, Add, Change и т.д.).
+
+### Docker compose контейнеры:
+- Minio - система хранения объектов (файлы, изображения и т.д.);
+- Postgres - система управления базами данных (СУБД);
+- Adminer - панель управления СУБД-контейнерами.
+
+### Другое:
+- go.mod и go.sum - списки импортируемых пакетов;
+- .pre-commit-config.yaml, golangci.yml, golangci.bck.yml - запуск pre-commit на локальной машине, включающий в себя именно golangci-lint (форматтер, линтер);
+- .gitignore - игнорирование push для указанных форматов.
+
+### Инструкция по установке:
+1. Выполнить git clone https://github.com/max0194/threat-monitoring-backend.git в пустую директорию;
+2. Выполнить git clone https://github.com/max0194/threat-monitoring-frontend.git в ту же директорию;

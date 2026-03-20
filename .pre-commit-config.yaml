@@ -31,6 +31,6 @@ repos:
 
       - id: check-filenames
         name: check-filenames
-        entry: python ../scripts/check_filenames.py
+        entry: python ./scripts/check_filenames.py
         language: system
         files: '.*'
