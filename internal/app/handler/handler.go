@@ -3,18 +3,13 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"threat-monitoring/internal/app/repository"
 	"time"
 
-	"io"
-
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"golang.org/x/text/encoding/charmap"
-	"golang.org/x/text/transform"
 )
 
 type Handler struct {
@@ -380,7 +375,11 @@ func (h *Handler) CreateFact(ctx *gin.Context) {
 		ctx.Redirect(http.StatusFound, "/employee?error=Error while uploading")
 		return
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			logrus.Error("Ошибка при закрытии файла:", err)
+		}
+	}()
 
 	objectName := repository.GenerateObjectName(header.Filename)
 
@@ -491,27 +490,10 @@ func (h *Handler) UpdateRequestStatus(ctx *gin.Context) {
 	ctx.Redirect(http.StatusFound, "/request/"+requestIDStr)
 }
 
-func getFileExtension(filename string) string {
-	ext := strings.ToLower(filepath.Ext(filename))
-	if ext == ".jpeg" {
-		return ".jpg"
-	}
-	return ext
-}
-
 func isValidUTF8(s string) bool {
 	return strings.IndexFunc(s, func(r rune) bool {
 		return r == '\uFFFD'
 	}) == -1
-}
-
-func convertFromWindows1251(s string) (string, error) {
-	reader := transform.NewReader(strings.NewReader(s), charmap.Windows1251.NewDecoder())
-	result, err := io.ReadAll(reader)
-	if err != nil {
-		return "", err
-	}
-	return string(result), nil
 }
 
 func fixUTF8(s string) string {

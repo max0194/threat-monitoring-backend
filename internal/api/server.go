@@ -77,6 +77,8 @@ func StartServer() {
 	r.POST("/request/:id/delete", h.DeleteRequest)
 	r.POST("/request/:id/update-status", h.UpdateRequestStatus)
 
-	r.Run(":8080")
+	if err := r.Run(":8080"); err != nil {
+		logrus.Fatal("Ошибка при запуске сервера:", err)
+	}
 	log.Println("Server down")
 }
